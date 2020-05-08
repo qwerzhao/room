@@ -14,7 +14,10 @@ bilibili：狂神说 Java
 - 3.19  更新 MyBatisPlus教程 https://www.bilibili.com/video/av97733494
 - 3.20  更新了 Git教程 https://www.bilibili.com/video/av98007542
 - 3.24  更新了 Linux 教程 
-
+- 4.01  更新了 Redis 教程 
+- 4.07  更新了 ElasticSearch 教程 
+- 4.22  更新了 POI&easyExcel 教程 
+- 5.01  更新了 阿里云短信业务 教程 
 ---
 
 ### B站主页：
