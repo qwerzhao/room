@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>青岛啤酒</title>
+    <script src="js/axios.js"></script>
+    <script src="js/jquery-1.8.3.min.js"></script>
+    <script src="js/vue.min.js"></script>
+
+</head>
+<body>
+<div id="all">
+<h1>欢迎您，<span>{{names}}</span></h1>
+    <ul >
+        <li v-for="s in mes">
+            {{s.bid}}~~{{s.bname}}~~{{s.bprice}}~~{{s.bcolor}}~~{{s.bvol}}~~{{s.btime}}<a href=javaScript:void(0) @click="del(s.bid)">删除</a>
+            <a href="javaScript:void(0)" @click="getbyid(s.bid)">修改</a>
+        </li>
+    </ul>
+    <a @click="before()">上一页</a> <a @click="next()">下一页</a>
+    <div>
+        <p>
+            名称:<input type="text" v-model="name" id="name"/>
+            颜色:<input type="text" v-model="color" id="color"/>
+            价格:<input type="text" v_model="price" id="price"/>
+            <input type="date" v-model="dd">
+        </p>
+        <p>
+            生产时间:
+            <select id="year">
+                <option value=""></option>
+            </select>年
+            <select id="month">
+                <option value=""></option>
+            </select>月
+            <select id="day">
+                <option value=""></option>
+            </select>日——
+            <select id="year1">
+                <option value=""></option>
+            </select>年
+            <select id="month1">
+                <option value=""></option>
+            </select>月
+            <select id="day1">
+                <option value=""></option>
+            </select>日
+        </p>
+        <input type="button" id="find" value="点击查询" @click="find">
+    </div>
+    <div id="update">
+       ID: <input type="text" v-model="bar.bid" /><br/>
+       名称: <input type="text" v-model="bar.bname" /><br/>
+       颜色: <input type="text" v-model="bar.bcolor" /><br/>
+        <input type="button" @click="btn()" value="确认修改"/><br/>
+    </div>
+</div>
+</body>
+<script type="text/javascript">
+    $(function(){
+        date();
+    })
+    var bar = JSON.parse(sessionStorage.getItem('bar'));
+    var index = 1;
+    new Vue({
+        el:"#all",
+        data:{
+            names :"",
+            mes:"",
+            color:"",
+            price:"",
+            name:"",
+            bar :"",
+            dd:"",
+            index:1
+        },mounted(){
+            var bname = bar.bname;
+            this.names=bname;
+            this.findAll();
+        }
+        ,methods:{
+            //查询
+            findAll:function(){
+                axios.get("/findAll",{params:{index:this.index,bname:this.name,bprice:this.price,bcolor:this.color}}).then(res=>{
+                    this.mes=res.data;
+                })
+            },
+            find:function(){
+                alert("ss");
+               this.findAll();
+            },
+            //上一页
+            before:function(){
+                this.index --;
+                if(this.index<1){
+                    alert("已经是第一页了");
+                    this.index =1
+                }
+              this.findAll();
+            },
+            //下一页
+            next:function(){
+                this.index ++;
+                this.findAll();
+            },
+            del:function(bid){
+                axios.get("/del",{params:{bid:bid}}).then(res=>{
+                   if(res.data){
+                       alert("删除成功");
+                       this.findAll();
+                   }else{
+                       alert("失败");
+                   }
+                })
+            },
+            getbyid:function(bid){
+                axios.get("/getbyid",{params:{bid:bid}}).then(res=>{
+                    this.bar = res.data;
+                    alert(this.bar);
+                })
+            },
+            btn:function(){
+                alert(this.dd);
+                axios.get("/update",{params:{bid:bid}}).then(res=>{
+                    this.bar = res.data;
+                    alert(this.bar);
+                })
+            }
+
+        }
+
+    });
+    //显示年月日
+    function date() {
+        //年份
+        var year = $("#year")
+        year.empty();
+        for (var i = 1980; i < 2021; i++) {
+            var node = '<option value="' + i + '">' + i + '</option>';
+            year.append(node);
+        }
+        //月份
+        var month = $("#month")
+        month.empty();
+        for (var i = 1; i <= 12; i++) {
+            var node;
+            if(i<=9){
+                node = '<option value="' + ("0"+i) + '">' + ("0"+i) + '</option>';
+            }else{
+                node = '<option value="' + i + '">' + i + '</option>';
+            }
+            month.append(node);
+        }
+        //日期
+        var day = $("#day")
+        day.empty();
+        for (var i = 1; i < 31; i++) {
+            var node;
+            if(i<=9){
+                node = '<option value="' + ("0"+i) + '">' + ("0"+i) + '</option>';
+            }else{
+                node = '<option value="' + i + '">' + i + '</option>';
+            }
+            day.append(node);
+        }
+        //年份
+        var year1 = $("#year1")
+        year1.empty();
+        for (var i = 1980; i < 2021; i++) {
+            var node = '<option value="' + i + '">' + i + '</option>';
+            year1.append(node);
+        }
+        //月份
+        var month1 = $("#month1")
+        month1.empty();
+        for (var i = 1; i <= 12; i++) {
+            var node;
+            if(i<=9){
+                node = '<option value="' + ("0"+i) + '">' + ("0"+i) + '</option>';
+            }else{
+                node = '<option value="' + i + '">' + i + '</option>';
+            }
+            month1.append(node);
+        }
+        //日期
+        var day1 = $("#day1")
+        day1.empty();
+        for (var i = 1; i < 31; i++) {
+            var node;
+            if(i<=9){
+                node = '<option value="' + ("0"+i) + '">' + ("0"+i) + '</option>';
+            }else{
+                node = '<option value="' + i + '">' + i + '</option>';
+            }
+            day1.append(node);
+        }
+    }
+</script>
+</html>

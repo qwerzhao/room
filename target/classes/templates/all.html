@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>整租</title>
+    <script src="/js/jquery-1.8.3.min.js"></script>
+</head>
+<body>
+<div>
+    <input type="hidden" id="id">
+    <p>请选择付款方式:
+        <select name="type" id="type" >
+            <option value="押一付三">押一付三</option>
+            <option value="押一付三">押二付一</option>
+        </select>
+        </p><p>选择合同期限：
+        <select name="dateLimit" id="dateLimit">
+            <option value="半年">半年</option>
+            <option value="一年">一年</option>
+            <option value="三年">三年</option>
+        </select>
+    <input type="button" id="bt" value="确定租房">
+    </p>
+</div>
+</body>
+<script>
+    $("#bt").click(function(){
+        var type =$("#type").val();
+        var dateLimit =$("#dateLimit").val();
+        var  id =$("#id").val();
+        $.post("/all",{"type":type,"dateLimit":dateLimit,"id":id},function(result){
+            if(result>0){
+                alert("租房成功");
+                window.location.href="index.html";
+            }else{
+                alert("租房失败");
+            }
+        })
+
+    })
+</script>
+</html>
