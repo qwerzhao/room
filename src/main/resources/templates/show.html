@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>首页</title>
+    <script src="js/axios.js"></script>
+    <script src="js/jquery-1.8.3.min.js"></script>
+    <script src="js/vue.min.js"></script>
+</head>
+<body>
+<div id="all">
+    <h1>欢迎您，<span>{{bname}}</span><a href="javaScript:void(0)" @click="center()">个人中心</a></h1>
+    <div id="b" style="display: none">
+        <h1>宠物</h1>
+        <table border="1px">
+            <tr>
+                <td>宠物名称</td>
+                <td>宠物价格</td>
+            </tr>
+            <tr v-for="s in message">
+                <td>{{s.name}}</td>
+                <td>{{s.price}}</td>
+            </tr>
+        </table>
+    </div>
+        <table>
+            <tr>
+                <td> 编号</td>
+                <td> 宠物</td>
+                <td>价格</td>
+                <td>主人</td>
+            </tr>
+            <tr v-for="s in mes">
+                <td> {{s.id}}</td>
+                <td>{{s.name}}</td>
+                <td>{{s.price}}</td>
+                <td>{{s.pname}}</td>
+                <td> <a href=javaScript:void(0) @click="buy(s.id)">点击购买</a>
+            </tr>
+        </table>
+    <a href="javaScript:void(0)" @click="prev()">上一页</a> <a href="javaScript:void(0)" @click="next()">下一页</a>
+    <div>
+        <p>
+            宠物名称:<input type="text" v-model="name" />
+            主人名字:<input type="text" v-model="pname" >
+            价格:<input type="text" v-model="price" />
+            <input type="button" @click="btn()" value="点击查询"/>
+        </p>
+    </div>
+</div>
+</body>
+<script>
+    new Vue({
+        el:"#all",
+        data:{
+            message:"",
+            mes:"",
+            name:"",
+            price:0,
+            pname:"",
+            count:"",
+            index:1,
+            bname:"",
+            pid:""
+        },mounted(){
+            //显示当前登录用户
+            this.bname = JSON.parse(sessionStorage.getItem('user')).pname;
+            alert(this.bname);
+           this.getPet();
+        },methods:{
+            getPet:function(){
+                this.pid=JSON.parse(sessionStorage.getItem('user')).pid;
+                axios.get("/getPet",{params:{pid:this.pid,index:this.index,name:this.name,price:this.price,pname:this.pname}}).then(res=>{
+                    this.count=res.data[0];
+                    this.mes=res.data[1];
+            })
+            },//下一页
+            next:function(){
+                this.index ++;
+                if(this.index>this.count){
+                    alert("已经是最后一页了");
+                    this.index=this.count;
+                }
+                this.getPet();
+            },//上一页
+            prev:function(){
+                this.index --;
+                if(this.index<1){
+                    alert("已经是第一页了");
+                    this.index =1
+                }
+                this.getPet();
+            },
+            //点击查询
+            btn:function(){
+                this.getPet();
+            },
+            center:function(){
+                this.pid = JSON.parse(sessionStorage.getItem('user')).pid;
+                axios.get("/spet",{params:{"pid":this.pid}}).then(res=>{
+                    this.message=res.data;
+                })
+                $("#b").show();
+
+            },
+            buy:function(id){
+                this.pid=JSON.parse(sessionStorage.getItem('user')).pid;
+                axios.get("/buy",{params:{id:id,pid:this.pid}}).then(res=>{
+                    if(res.data){
+                        alert("购买成功");
+                        this.getPet();
+                    }
+                })
+            }
+        },
+
+    })
+</script>
+</html>

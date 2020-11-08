@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>注册</title>
+    <script src="js/axios.js"></script>
+    <script src="js/jquery-1.8.3.min.js"></script>
+    <script src="js/vue.min.js"></script>
+
+</head>
+<body>
+<div id="register">
+    <p> 名称:<input type="text" v-model="pname" /></p>
+    <p> 密码:<input type="password" v-model="pwd" /></p>
+    <p> 余额:<input type="text" v-model="pmoney" /></p>
+    <input type="button" value="注册"  @click="register"/>
+</div>
+</body>
+<script>
+    new Vue({
+        el:"#register",
+        data:{
+            pname :"",
+            pwd:"",
+            pmoney:""
+        },methods:{
+            register:function(){
+                axios.get("/register",{params:{pname:this.pname,pwd:this.pwd,pmoney:this.pmoney}}).then(res=>{
+                   if(res.data){
+                       alert("注册成功");
+                       location.href="petLogin.html";
+                   }else{
+                       location.href="register.html";
+                   }
+                })
+            }
+        }
+    })
+</script>
+</html>

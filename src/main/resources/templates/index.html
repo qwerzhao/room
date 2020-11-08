@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>首页</title>
+    <style>
+        li{
+            list-style: none;
+            display: inline;
+        }
+    </style>
+    <script src="/js/jquery-1.8.3.min.js"></script>
+</head>
+<body>
+<h1>欢迎来到租房网</h1>
+<div>
+    <p>区域： <select id="address1"><option></option></select>
+        地址名称： <select id="address2"><option></option></select>
+        价格: <input type="text" id="price"/>
+        <input type="button" id="but" value="点击查询" />
+    </p>
+</div>
+<div>
+    <table border="1px" class="a">
+        <tr class="b">
+            <td>编号</td>
+            <td>名称</td>
+            <td>价格</td>
+            <td>房源类型</td>
+            <td>
+                 区域
+            </td>
+            <td>
+                地址名称
+            </td>
+            <td>
+                操作
+            </td>
+        </tr>
+    </table>
+</div>
+<div class="pager">
+    <ul class="clearfix">
+        <li><a id="first">首页</a></li>
+        <li><a id="before">上一页</a></li>
+        <li><a id="after">下一页</a></li>
+        <li><a id="end">尾页</a></li>
+    </ul>
+</div>
+</div>
+</body>
+<script>
+    var count=0;
+    var index=1;
+    $(function(){
+        findAll();
+        first();
+        before();
+        after();
+        end();
+        a();
+    });
+    $("#address1").change(function(){
+        b();
+    });
+    //一级
+    function a(){
+        var one = $("#address1");
+        $.post("/getOne",function(result){
+            one.empty();
+            for(var i = 0;i<result.length;i++){
+                var node ='<option value="'+result[i].id+'">'+result[i].name+'</option>';
+                one.append(node);
+            }
+            b();
+        },"JSON");
+    }
+    //二级b
+    function b(){
+        var id=$("#address1").val();
+        var two = $("#address2");
+        $.post("/geTwo","id="+id,function(result){
+            two.empty();
+            for(var i = 0;i<result.length;i++){
+                var node ='<option value="'+result[i].id+'">'+result[i].name+'</option>'
+                two.append(node);
+            }
+        },"JSON")
+    }
+    $("#but").click(function(){
+        index=1;
+        getAll();
+    })
+    //查询所有
+    function findAll(){
+        index = 1;
+        getAll();
+    }
+    function getAll(){
+      var a = $(".a");
+        a.empty();//清空
+        var b=$(".b");
+        a.append(b);
+        var address1 = $("#address1").val();
+        var address2=$("#address2").val();
+        var price =$("#price").val();
+        $.post("/getAll",{"index":index,"address1":address1,"address2":address2,"price":price},function(data){
+            count=data[0];
+            var result=data[1];
+            /*productClass-modify.html*/
+            for(var i=0;i<result.length;i++) {
+              var node =' <tr class="b">\n' +
+                  '            <td>'+result[i].id+'</td>\n' +
+                  '            <td>'+result[i].name+'</td>\n' +
+                  '            <td>'+result[i].price+'</td>\n' +
+                  '            <td>三室一厅</td>\n' +
+                  '            <td>\n' +
+                  '                 '+result[i].one+'\n' +
+                  '            </td>\n' +
+                  '            <td>\n' +
+                  '                '+result[i].two+'\n' +
+                  '            </td>\n' +
+                  '            <td><a href="all.html?id='+result[i].id+'">整租</a></td>\n' +
+                  '            <td><a href="fen.html?id='+result[i].id+'">分租</a></td>\n' +
+                  '        </tr>';
+
+                a.append(node);
+            }
+        },"json");
+    }
+    //首页
+    function first(){
+        $("#first").click(function(){
+            index = 1;
+            getAll()
+        });
+    }
+    //上一页
+    function before(){
+        $("#before").click(function(){
+            index = index-1;
+            if(index<1){
+                alert("已经是第一页了");
+                index=1
+            }
+            getAll()
+        });
+    }
+    //下一页
+    function after(){
+        $("#after").click(function(){
+            index=index+1;
+            if(index>=count){
+                alert("已经是最后一页了");
+                index=count;
+            }
+            getAll()
+        });
+    }
+    //尾页
+    function end(){
+        $("#end").click(function(){
+            index = count;
+            getAll()
+        });
+    }
+</script>
+</html>

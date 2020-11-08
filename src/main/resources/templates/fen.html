@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>vue</title>
+    <script type="text/javascript" src="js/vue.min.js"></script>
+    <script type="text/javascript" src="js/jquery-1.8.3.min.js"></script>
+
+</head>
+<body>
+<div class="sb" v-html="aaa()">{{message}}
+    <div> {{hmp}} {{aaa()}}</div>
+    <input type="button" value="点击" @click="doIt"/>
+</div>
+
+<div id="b" >
+    <div >{{aac()}} </div>
+    <div >{{aab()}} </div>
+    <div >{{name+name1+age/age1}}</div>
+    <div >{{age-age1}}</div>
+    <div >{{age%age1}}</div>
+    <div >{{age>age1}}</div>
+</div>
+<div id="test">
+    <h3>{{msg.split('').reverse().join('')}}</h3>
+    <input type="text" v-model="msg"/>
+    <table id="aj">
+        {{aj()}}
+    </table>
+    <textarea v-model="aj()"></textarea>
+</div>
+<!--这里是html结构-->
+<div id="app">
+    <ul>
+        <li
+                v-for="(item,index) in tabs"
+                :class="{active:index == num}"
+                @click="tab(index)">{{item}}</li>
+    </ul>
+    <div class="tabCon">
+        <div
+                v-for='(itemCon,index) in tabContents'
+                v-show=" index == num">{{itemCon}}</div>
+    </div>
+</div>
+</body>
+<script type="text/javascript">
+    var s = new Vue({
+        el:".sb",
+        data :{
+            message:"<h1>Hello world</h1>",
+            hmp :"你是蛤蟆皮"
+        },
+        methods:{
+            doIt :function(){
+
+return "秋老虎";
+            },
+            aaa:function(){
+                alert("我是他");
+                return "<h1>aaa</h1>";
+            }
+        }
+    });
+    var s2= new Vue({
+        el:"#b",
+        data :{
+            name :"小名",
+            age :"29",
+            name1 :"小白",
+            age1 :"19"
+        },
+        methods:{
+            aab:function(){
+                return "小红 20";
+            },
+            aac:function(){
+                return "小明 10";
+            }
+        }
+    })
+    var s5 = new Vue({
+        el:"#test",
+        data :{
+            msg:"abcdefg"
+        },
+        methods:{
+            aj:function(){
+                $.post("/gets",function(result){
+                    var ajax =$("#aj");
+                    for(var i=0;i<result.length;i++){
+                        var node ='  <tr class="b">\n' +
+                            '            <td>'+result[i].name+'</td>\n' +
+                            '            <td>'+result[i].price+'</td>\n' +
+                            '        </tr>';
+                        ajax.append(node);
+                    }
+                },"json")
+                return ;
+            }
+        }
+    })
+    var vm = new Vue({
+        el: '#app',
+        data: {
+            tabs: ["标题一", "标题二","标题三"],
+            tabContents: ["内容一", "内容二","内容三"],
+            num: 1
+        },
+        methods: {
+            tab(index) {
+                this.num = index;
+            }
+        }
+    });
+</script>
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>个人中心</title>
+    <script src="js/axios.js"></script>
+    <script src="js/jquery-1.8.3.min.js"></script>
+    <script src="js/vue.min.js"></script>
+</head>
+<body>
+<div id="a">
+    <a href="javaScript:void(0)" @click="spet()">宠物</a>
+    <a href="javaScript:void(0)" @click="count()">交易记录</a>
+    <div id="b">
+        <table border="1px">
+            <tr>
+                <td>宠物名称</td>
+                <td>宠物价格</td>
+            </tr>
+            <tr v-for="s in message">
+                <td>{{s.name}}</td>
+                <td>{{s.price}}</td>
+            </tr>
+        </table>
+    </div>
+</div>
+</body>
+<script>
+    new Vue=({
+            el:"#a",
+            data :{
+                pid:""
+            },mounted:{
+
+            }
+            ,methods:{
+
+                spet:function(){
+                    this.pid = JSON.parse(sessionStorage.getItem('user')).pid;
+                    axiox.get("/spet",{params:{"pid":pid}}).then(res=>{
+                        this.message=res.data;
+                    })
+                }
+            }
+    })
+</script>
+</html>

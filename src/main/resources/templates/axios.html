@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>啥子</title>
+    <script src="js/axios.js"></script>
+    <script src="js/vue.min.js"></script>
+    <script src="js/jquery-1.8.3.min.js"></script>
+
+</head>
+<body>
+
+<ul id="first">
+    <li v-for="s in message">
+        {{s.name}}~~{{s.price}}
+    </li>
+    <h3>{{message}}</h3>
+</ul>
+</body>
+<script type="text/javascript">
+    // url get/post params 回调函数
+   /* axios({
+        url :"/hello",
+        method : "post",
+        params :{a:1,b:2}
+    }).then(result=>{
+        console.log(result+"~~~~~~");
+    });*/
+    // axios.post("/hello").then(res=>{
+    //     alert(res);
+    //     console.log(res);
+    // }).catch(error=>{
+    //     console.log(error+"!!!");
+    // });
+    new Vue({
+        el :"#first",
+        data:{
+            message:""
+        }
+        ,mounted(){
+            axios.get("/hello",{params:{name:"小黑"}}).then(res=>{
+                this.message =res.data ;
+                console.log(res);
+            }).catch(error=>{
+                console.log(error+"!!!");
+            });
+        }
+    });
+</script>
+</html>

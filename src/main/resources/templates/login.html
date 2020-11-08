@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>登录</title>
+    <script src="js/axios.js"></script>
+    <script src="js/jquery-1.8.3.min.js"></script>
+    <script src="js/vue.min.js"></script>
+</head>
+<body>
+<div id="bo">
+    <p> ID:<input type="text" v-model="bid" id="bid"/></p>
+    <p> 名称:<input type="text" v-model="bname" id="bname"/></p>
+    <input type="button" value="登录"  @click="login"/>
+</div>
+</body>
+<script>
+    new Vue({
+        el:"#bo",
+        data:{
+            bid:"",
+            bname:""
+        },
+        methods:{
+            login:function(){
+                axios.get("/login",{params:{bid:this.bid,bname:this.bname}}).then(res=>{
+                    var bar=res.data;
+                    if(bar!=null){
+                        alert("登录成功");
+                        window.location.href="bar.html";
+                        sessionStorage.setItem( "bar", JSON.stringify(bar) );
+                    }else{
+                        alert("登录失败");
+                        window.location.href="login.html";
+                    }
+
+                })
+            }
+        }
+
+    })
+</script>
+</html>
